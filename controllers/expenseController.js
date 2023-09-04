@@ -1,4 +1,4 @@
-const Expense = require('../models/Expense');
+const { Expense } = require('../models');
 const jwt = require("jsonwebtoken");
 
 const expenseController = {
@@ -15,8 +15,6 @@ const expenseController = {
     if (!decoded) {
       return res.sendStatus(403);
     }
-
-
 
     const expense = await Expense.create({
       user_id: 1,

@@ -1,22 +1,9 @@
-const Category = require('../models/Category');
-const jwt = require("jsonwebtoken");
+const {Category} = require('../models');
 
 const categoryController = {
   create: async (req, res) => {
     const { name } = req.body;
-    const user_id = req.id;
-
-    const token = req.headers.authorization;
-
-    if (!token) {
-      return res.sendStatus(401);
-    }
-
-    const decoded = jwt.verify(token, "jwtPrivateKey")
-
-    if (!decoded) {
-      return res.sendStatus(403);
-    }
+    const {user_id} = req.body;
 
     const category = await Category.create({
       user_id,
@@ -29,8 +16,6 @@ const categoryController = {
   edit: async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
-
-
 
     const category = await Category.findOne({
       where: { id },

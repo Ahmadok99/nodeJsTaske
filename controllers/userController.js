@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const config = require('config');
 const _ = require('lodash');
-const { User, validateUser } = require("../models/User");
+const { User } = require("../models");
 
 const userController = {
     register: async (req, res) => {
@@ -56,6 +55,7 @@ const userController = {
         });
 
         res.json({ user, token });
+
     },
 
     list: async (req, res) => {

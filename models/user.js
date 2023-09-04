@@ -1,39 +1,33 @@
-const { DataTypes,INTEGER } = require('sequelize');
-const db = require('../db');
-const Joi = require('joi');
-const jwt = require('jsonwebtoken');
-const config = require('config');
-const { method } = require('lodash');
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class User extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+      User.hasMany(models.Category, { foreignKey: 'user_id' });
 
 
-const userSchema = {
-  id:{type:INTEGER,
-  autoIncrement: true,
-  primaryKey: true},
-  name: DataTypes.STRING,
-  email: DataTypes.STRING,
-  password: DataTypes.STRING,
-  last_login: DataTypes.DATE,
-};
-
-module.exports.generateAuthToken= function() {
-  const token = jwt.sign({ _id: this._id}, config.get('task_jwtPrivateKey'));
-  return token;
-}
-const User = db.define('User', userSchema );
-
-function validateUser(User){
-  const schema = Joi.object({
-    name: Joi.string().min(3).required(),
-    email: Joi.string().min(3).required(),
-    password: Joi.string().min(3).required(),
+    }
+  }
+  User.init({
+    id:{
+      type:DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true},
+      name: DataTypes.STRING,
+      email: DataTypes.STRING,
+      password: DataTypes.STRING,
+      last_login: DataTypes.DATE,
+  }, {
+    sequelize,
+    modelName: 'User',
   });
-  return schema.validate(User);
-
-
-
-}
-
-
-exports.User = User;
-exports.validateUser=validateUser;
+  return User;
+};

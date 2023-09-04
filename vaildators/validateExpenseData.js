@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const expenseSchema = Joi.object({
-    userId: Joi.string().required(),
+    user_id: Joi.string().required(),
     amount: Joi.number().min(0).required(),
     spending_date: Joi.date().iso().required(),
     category_id: Joi.string().required(),
