@@ -1,13 +1,19 @@
-const express = require('express')
-const router = express.Router()
-const auth = require('../middleware/auth');
-const { create, edit, delete: destroy, list, get } = require('../controllers/categoryController');
-const validateCategoryData = require('../vaildators/validateCategoryData')
+const express = require("express");
+const router = express.Router();
+const auth = require("../middleware/auth");
+const {
+    create,
+    edit,
+    delete: destroy,
+    list,
+    get,
+} = require("../controllers/categoryController");
+const validateCategoryData = require("../vaildators/validateCategoryData");
 
-router.post('/create'  ,auth,validateCategoryData, create);
-router.put('/edit/:id',auth ,validateCategoryData, edit);
-router.delete('/delete/:id',auth , destroy);
-router.get('/get/:id',auth, get);
-router.get('/list',auth, list);
+router.post("/", auth, validateCategoryData, create);
+router.put("/:id", auth, validateCategoryData, edit);
+router.delete("/:id", auth, destroy);
+router.get("/:id", auth, get);
+router.get("/", auth, list);
 
 module.exports = router;

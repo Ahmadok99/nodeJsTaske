@@ -1,33 +1,38 @@
 const { Expense } = require('../models');
 const jwt = require("jsonwebtoken");
 
-const expenseController = {
-  create: async (req, res) => {
-    const { category_id, spending_date, amount } = req.body;
-    const token = req.headers.authorization;
+/**
+ * create expense.
+ */
+exports.create = async (req, res) => {
+  const { category_id, spending_date, amount } = req.body;
+  const token = req.headers.authorization;
 
-    if (!token) {
-      return res.sendStatus(401);
-    }
+  if (!token) {
+    return res.sendStatus(401);
+  }
 
-    const decoded = jwt.verify(token, "jwtPrivateKey")
+  const decoded = jwt.verify(token, "jwtPrivateKey")
 
-    if (!decoded) {
-      return res.sendStatus(403);
-    }
+  if (!decoded) {
+    return res.sendStatus(403);
+  }
 
-    const expense = await Expense.create({
-      user_id: 1,
-      category_id,
-      spending_date,
-      amount,
-    });
+  const expense = await Expense.create({
+    user_id,
+    category_id,
+    spending_date,
+    amount,
+  });
 
-    res.status(201).json(expense);
+  res.status(201).json(expense);
 
-  },
+},
 
-  edit: async (req, res) => {
+  /**
+   * edit expense.
+   */
+  exports.edit = async (req, res) => {
     const { id } = req.params;
     const { category_id, spending_date, amount } = req.body;
 
@@ -44,7 +49,10 @@ const expenseController = {
     res.json(expense);
   },
 
-  delete: async (req, res) => {
+  /**
+   * delete expense by id.
+   */
+  exports.delete = async (req, res) => {
     const { id } = req.params;
 
     const expense = await Expense.findOne({
@@ -61,7 +69,10 @@ const expenseController = {
 
   },
 
-  list: async (req, res) => {
+  /**
+   * list expenses.
+   */
+  exports.list = async (req, res) => {
 
     const expenses = await Expense.findAll({
       where: {},
@@ -70,7 +81,10 @@ const expenseController = {
     res.json(expenses);
   },
 
-  listByDate: async (req, res) => {
+  /**
+   * list expenses by date.
+   */
+  exports.listByDate = async (req, res) => {
     const { dateFilter } = req.params;
     const expenses = await Expense.findAll({
       where: [{
@@ -79,7 +93,7 @@ const expenseController = {
     });
 
     res.json(expenses);
-  },
-};
+  }
 
-module.exports = expenseController;
+
+

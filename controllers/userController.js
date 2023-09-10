@@ -1,86 +1,71 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const _ = require('lodash');
 const { User } = require("../models");
+const config = require("config");
+const genToken = require("./tokenMiddleware");
+/**
+ * register new user.
+ */
+exports.register = async (req, res) => {
+  const { name, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const emailValidation = await User.findOne({ where: { email } });
 
-const userController = {
-    register: async (req, res) => {
+  if (emailValidation) {
+    return res.status(401).json({ error: "User already exist" });
+  } else {
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      last_login: new Date(),
+    });
+    await user.save();
+    const token = genToken({ _id: user._id }, config.get("jwtPrivateKey"));
+    res.json({ user, token });
+  }
+},
+  /**
+   * login user.
+   */
+  exports.login = async (req, res) => {
+    const { email, password } = req.body;
 
+    const user = await User.findOne({ where: { email } });
 
-        const { error } = validateUser(req.body);
-        if (error) return res.status(400), send(error.details[0].message);
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
 
-        const { name, email, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const emailValidation = await User.findOne({ where: { email } });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid)
+      res.status(401).json({ error: "Invalid credentials" });
 
-        if (emailValidation) {
-            return res.status(401).json({ error: "User alraedy exist" });
-        } else {
+    const token = genToken({ _id: user._id }, config.get("jwtPrivateKey"));
 
-            const user = await User.create({
-                name,
-                email,
-                password: hashedPassword,
-                last_login: new Date(),
-            });
-            await user.save();
+    res.json({ user, token });
+  },
+  /**
+   * list users.
+   */
+  exports.list = async (req, res) => {
+    const Users = await User.findAll();
+    res.json(Users);
+  },
+  /**
+   * delete user by id.
+   */
+  exports.delete = async (req, res) => {
+    const { id } = req.params;
 
-            const token = jwt.sign({ _id: user._id }, 'jwtPrivateKey', {
-                expiresIn: "1h",
-            });
+    const user = await User.findOne({
+      where: { id },
+    });
 
-            res.json({ user, token });
-        }
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-
-    },
-    login: async (req, res) => {
-        const { email, password } = req.body;
-
-
-        const user = await User.findOne({ where: { email } });
-
-        if (!user) {
-            return res.status(401).json({ error: "Invalid credentials" });
-        }
-
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid)
-            res.status(401).json({ error: "Invalid credentials" });
-
-
-        const token = jwt.sign({ _id: user._id }, 'jwtPrivateKey', {
-            expiresIn: "1h",
-        });
-
-        res.json({ user, token });
-
-    },
-
-    list: async (req, res) => {
-
-        const Users = await User.findAll();
-        res.json(Users);
-
-    },
-
-    delete: async (req, res) => {
-        const { id } = req.params;
-
-
-        const user = await User.findOne({
-            where: { id },
-        });
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        await user.destroy();
-        res.status(204).send();
-
-    },
-};
-
-module.exports = userController;
+    await user.destroy();
+    res.status(204).send();
+  };

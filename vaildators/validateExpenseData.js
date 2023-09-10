@@ -1,16 +1,24 @@
-const Joi = require('joi');
+const Joi = require("joi");
 const expenseSchema = Joi.object({
-    user_id: Joi.string().required(),
-    amount: Joi.number().min(0).required(),
-    spending_date: Joi.date().iso().required(),
-    category_id: Joi.string().required(),
+  user_id: Joi.string().required(),
+  amount: Joi.number().min(0).required(),
+  spending_date: Joi.date().iso().required(),
+  category_id: Joi.string().required(),
 });
 
+/**
+ * This function use to check expense of user data.
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 const validateExpenseData = (req, res, next) => {
-    const { error } = expenseSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ error: error.details[0].message });
-    }
-    next();
+  const { error } = expenseSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  next();
 };
-module.exports = validateExpenseData
+module.exports = validateExpenseData;

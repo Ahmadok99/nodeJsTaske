@@ -1,5 +1,3 @@
-const { DataTypes } = require('sequelize');
-
 'use strict';
 const {
   Model
@@ -13,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Category.belongsTo(models.User, { foreignKey: 'user_id' });
+      Category.hasMany(models.Expense, { foreignKey: 'category_id' });
     }
   }
   Category.init({
