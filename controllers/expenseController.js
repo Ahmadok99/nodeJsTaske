@@ -8,16 +8,6 @@ exports.create = async (req, res) => {
   const { category_id, spending_date, amount } = req.body;
   const token = req.headers.authorization;
 
-  if (!token) {
-    return res.sendStatus(401);
-  }
-
-  const decoded = jwt.verify(token, "jwtPrivateKey")
-
-  if (!decoded) {
-    return res.sendStatus(403);
-  }
-
   const expense = await Expense.create({
     user_id,
     category_id,
