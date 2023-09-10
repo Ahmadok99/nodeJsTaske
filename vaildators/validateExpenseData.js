@@ -1,24 +1,18 @@
-const Joi = require("joi");
-const expenseSchema = Joi.object({
-  user_id: Joi.string().required(),
-  amount: Joi.number().min(0).required(),
-  spending_date: Joi.date().iso().required(),
-  category_id: Joi.string().required(),
-});
+const { body, validationResult } = require('express-validator');
 
-/**
- * This function use to check expense of user data.
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
- */
+const expenseValidation = [
+  body('user_id').isString().notEmpty(),
+  body('amount').isNumeric().isFloat({ min: 0 }),
+  body('spending_date').isISO8601().toDate(),
+  body('category_id').isString().notEmpty(),
+];
+
 const validateExpenseData = (req, res, next) => {
-  const { error } = expenseSchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ error: errors.array()[0].msg });
   }
   next();
 };
-module.exports = validateExpenseData;
+
+module.exports = { expenseValidation, validateExpenseData };

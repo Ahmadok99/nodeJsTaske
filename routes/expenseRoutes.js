@@ -7,7 +7,7 @@ const {
     list,
     listByDate,
 } = require("../controllers/expenseController");
-const validateExpenseData = require("../vaildators/validateExpenseData");
+const {validateExpenseData} = require("../vaildators/validateExpenseData");
 const auth = require("../middleware/auth");
 
 router.post("/", validateExpenseData, auth, create);

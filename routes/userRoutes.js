@@ -6,7 +6,7 @@ const {
     list,
     delete: destroy,
 } = require("../controllers/userController");
-const validateUserData = require("../vaildators/validateUserData");
+const {validateUserData} = require("../vaildators/validateUserData");
 
 router.post("/register", validateUserData, register);
 router.post("/login", validateUserData, login);

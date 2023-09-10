@@ -1,24 +1,19 @@
-const Joi = require("joi");
+const { body, validationResult } = require('express-validator');
 
-const userSchema = Joi.object({
-  name: Joi.string().min(3).max(30).required(),
-  email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
-});
-/**
- * This function use to check validation of user data.
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns 
- */
-const validateUserData = (req, res, next) => {
-  const { error } = userSchema.validate(req.body);
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
+// Define a middleware to validate user data
+const validateUserData = [
+  body('name').isString().isLength({ min: 3, max: 30 }).withMessage('Name must be between 3 and 30 characters'),
+  body('email').isEmail().withMessage('Invalid email address'),
+  body('password').isString().isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+];
+
+// Middleware to handle validation errors
+const handleValidationErrors = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
   next();
 };
 
-module.exports = validateUserData;
+module.exports = { validateUserData, handleValidationErrors };

@@ -8,7 +8,7 @@ const {
     list,
     get,
 } = require("../controllers/categoryController");
-const validateCategoryData = require("../vaildators/validateCategoryData");
+const {validateCategoryData} = require("../vaildators/validateCategoryData");
 
 router.post("/", auth, validateCategoryData, create);
 router.put("/:id", auth, validateCategoryData, edit);
