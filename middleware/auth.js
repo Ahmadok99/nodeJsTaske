@@ -1,19 +1,14 @@
-const jwt = require("jsonwebtoken");
-const config = require("config");
+require("dotenv").config();
 
-//check for ENV.jwt if it's exist or not.
-if (!config.get("jwtPrivateKey")) {
-    console.error("FATAL ERROR: jwtPrivateKey is not defined.");
-    process.exit(1);
-}
+const jwt = require("jsonwebtoken");
 
 /**
  * This function use to check if the token is valide.
- * 
- * @param {*} req  token in req header.
- * @param {*} res  check if the token is valide. 
- * @param {*} next 
- * @returns 
+ *
+ * @param {import('express').Request} req  token in req header.
+ * @param {import('express').Response} res  check if the token is valide.
+ * @param {import('express').NextFunction} next - The next middleware function to call.
+ * @returns {void}
  */
 const authenticateToken = function (req, res, next) {
     const token = req.headers.authorization;
@@ -22,7 +17,7 @@ const authenticateToken = function (req, res, next) {
         return res.sendStatus(401);
     }
 
-    const decoded = jwt.verify(token, config.get("jwtPrivateKey"));
+    const decoded = jwt.verify(token, process.env.jwtPrivateKey);
 
     if (!decoded) {
         return res.sendStatus(403);

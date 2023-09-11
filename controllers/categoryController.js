@@ -1,6 +1,11 @@
 const { Category } = require("../models");
+
 /**
- * create user.
+ * This function use to create a new category.
+ * 
+ * @param {import('express').Request} req  category data in req body.
+ * @param {import('express').Response} res  create a category.
+ * @returns 
  */
 exports.create = async (req, res) => {
   const { name, user_id } = req.body;
@@ -13,9 +18,13 @@ exports.create = async (req, res) => {
   res.status(201).json(category);
 },
 
-  /**
-  * edit category.
-  */
+/**
+ * This function use to edit a category.
+ * 
+ * @param {import('express').Request} req  category data in req.
+ * @param {import('express').Response} res  edit a category. 
+ * @returns 
+ */
   exports.edit = async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
@@ -32,8 +41,13 @@ exports.create = async (req, res) => {
 
     res.json(category);
   },
-  /**
- * delete category by id.
+
+/**
+ * This function use to delete a category.
+ * 
+ * @param {import('express').Request} req  category id in req header.
+ * @param {import('express').Response} res  delete a category. 
+ * @returns 
  */
   exports.delete = async (req, res) => {
     const { id } = req.params;
@@ -50,9 +64,13 @@ exports.create = async (req, res) => {
     res.status(204).json({ message: "Expense deleted successfully" });
   },
 
-  /**
-  * get category by id.
-  */
+/**
+ * This function use to list a category by id.
+ * 
+ * @param {import('express').Request} req  category id in req header.
+ * @param {import('express').Response} res  get a category. 
+ * @returns 
+ */
   exports.get = async (req, res) => {
     const id = req.params.id;
 
@@ -67,9 +85,12 @@ exports.create = async (req, res) => {
     res.json(category);
   },
 
-  /**
-  * list categorys.
-  */
+/**
+ * This function use to list a category.
+ * 
+ * @param {import('express').Request} req  category data in req body.
+ * @param {import('express').Response} res  list a categorys. 
+ */
   exports.list = async (req, res) => {
     const categories = await Category.findAll({});
 

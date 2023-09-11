@@ -1,12 +1,18 @@
 require("express-async-errors");
-const config = require("config");
+require('dotenv').config();
+
 const express = require("express");
 const router = require("./routes");
 const bodyParser = require("body-parser");
 const errorMiddleware = require("./middleware/error");
-const app = express();
-const port = config.get('port');
+const responseHandler = require('./middleware/responseHandler'); 
 
+
+
+const app = express();
+const port = process.env.port;
+
+app.use(responseHandler);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());

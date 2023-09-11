@@ -8,10 +8,10 @@ const {
     list,
     get,
 } = require("../controllers/categoryController");
-const {validateCategoryData} = require("../vaildators/validateCategoryData");
+const {categoryValidation} = require("../vaildators/validateCategoryData");
 
-router.post("/", auth, validateCategoryData, create);
-router.put("/:id", auth, validateCategoryData, edit);
+router.post("/", auth, categoryValidation, create);
+router.put("/:id", auth, categoryValidation, edit);
 router.delete("/:id", auth, destroy);
 router.get("/:id", auth, get);
 router.get("/", auth, list);
