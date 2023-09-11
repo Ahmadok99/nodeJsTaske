@@ -3,7 +3,6 @@ const { User } = require("../models");
 const jwt = require('jsonwebtoken');
 
 const expiresIn = 1;
-// const genToken = require("../utils/gentoken");
 
 /**
  * This function use to register a new user.
