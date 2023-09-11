@@ -1,8 +1,6 @@
 const bcrypt = require("bcrypt");
 const { User } = require("../models");
-const jwt = require('jsonwebtoken');
-
-const expiresIn = 1;
+const {createToken} = require('../utils/auth');
 
 /**
  * This function use to register a new user.
@@ -25,8 +23,7 @@ exports.register = async (req, res) => {
       last_login: new Date(),
     });
     await user.save();
-    const secretKey = process.env.jwtPrivateKey;
-      const token = jwt.sign( { _id: user._id }, secretKey, { expiresIn });
+    const token = createToken({ userId: user.id });
       res.json({ user, token });
   }
   
@@ -49,8 +46,7 @@ exports.register = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid)
       res.status(401).json({ error: "Invalid credentials" });
-      const secretKey = process.env.jwtPrivateKey;
-      const token = jwt.sign( { _id: user._id }, secretKey, { expiresIn });
+      const token = createToken({ userId: user.id });
       res.json({ user, token });
     
     
