@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+const secretKey = process.env.jwtPrivateKey;
 /**
  * This function use to genTokens.
  * 
@@ -8,7 +9,7 @@ const jwt = require('jsonwebtoken');
  * @param {import('express').NextFunction} next - The next middleware function to call
  * @returns {void}
  */
-function generateTokenMiddleware(secretKey, expiresIn = '1h') {
+function generateTokenMiddleware( expiresIn = '1h') {
 
   return (req, res, next) => {
 
