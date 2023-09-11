@@ -24,7 +24,7 @@
 // module.exports = validateExpenseData;
 
 
-const { body, validationResult } = require('express-validator');
+const { body } = require('express-validator');
 
 const validateExpenseData = [
   body('user_id').isLength({ min: 6 }).withMessage('user_id must be at least 6 characters long'),
@@ -32,19 +32,5 @@ const validateExpenseData = [
   body('spending_date').isLength({ min: 6 }).withMessage('spending_date must be at least 6 characters long'),
   body('category_id').isLength({ min: 6 }).withMessage('category_id must be at least 6 characters long'),
 
-  /**
- * This function use to validateExpense.
- * @param {import('express').Request} req  expense name in req body
- * @param {import('express').Response} res  validation result. 
- * @param {import('express').NextFunction} next - The next middleware function to call
- * @returns {void}
- */
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    next(); 
-  },
 ];
 module.exports = validateExpenseData;

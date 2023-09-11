@@ -9,6 +9,7 @@ const { Expense } = require('../models');
  */
 exports.create = async (req, res) => {
   const { user_id, category_id, spending_date, amount } = req.body;
+
   const expense = await Expense.create({
     user_id,
     category_id,

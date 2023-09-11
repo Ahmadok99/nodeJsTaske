@@ -1,7 +1,9 @@
 const bcrypt = require("bcrypt");
 const { User } = require("../models");
-const config = require("config");
-const genToken = require("../middleware/gentoken");
+const jwt = require('jsonwebtoken');
+
+const expiresIn = 1;
+// const genToken = require("../utils/gentoken");
 
 /**
  * This function use to register a new user.
@@ -24,9 +26,11 @@ exports.register = async (req, res) => {
       last_login: new Date(),
     });
     await user.save();
-    const token = genToken({ _id: user._id }, config.get("jwtPrivateKey"));
-    res.json({ user, token });
+    const secretKey = process.env.jwtPrivateKey;
+      const token = jwt.sign( { _id: user._id }, secretKey, { expiresIn });
+      console.log(token)
   }
+  
 },
 
 /**
@@ -46,8 +50,13 @@ exports.register = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid)
       res.status(401).json({ error: "Invalid credentials" });
-    const token = genToken({ _id: user._id }, config.get("jwtPrivateKey"));
+      const secretKey = process.env.jwtPrivateKey;
+      const token = jwt.sign( { _id: user._id }, secretKey, { expiresIn });
+      
+  
     res.json({ user, token });
+
+    console.log('Token:', token);
   },
 /**
  * This function use to list a users.

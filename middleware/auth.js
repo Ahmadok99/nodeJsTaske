@@ -12,12 +12,14 @@ const jwt = require("jsonwebtoken");
  */
 const authenticateToken = function (req, res, next) {
     const token = req.headers.authorization;
-
+    const payload = {
+        userid:1
+    }
     if (!token) {
         return res.sendStatus(401);
     }
 
-    const decoded = jwt.verify(token, process.env.jwtPrivateKey);
+    const decoded = jwt.verify(payload, token, process.env.jwtPrivateKey);
 
     if (!decoded) {
         return res.sendStatus(403);

@@ -6,10 +6,18 @@
  * @param {import('express').Response} res  check if there any error. 
  * @param {import('express').NextFunction} next - The next middleware function to call.
  */
-module.exports.errorMiddleware = (err, req, res, next) => {
-    console.log({ error: err.message })
-    res.status(500).json({ error: 'Something went wrong' });
-};
+const ErrorHandler = (err, req, res, next) => {
+    console.log("Middleware Error Hadnling");
+    const errStatus = err.statusCode || 500;
+    const errMsg = err.message || 'Something went wrong';
+    res.status(errStatus).json({
+        success: false,
+        status: errStatus,
+        message: errMsg,
+        stack: process.env.NODE_ENV === 'development' ? err.stack : {}
+    })
+}
 
+module.exports =ErrorHandler
 
 
