@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
     await user.save();
     const secretKey = process.env.jwtPrivateKey;
       const token = jwt.sign( { _id: user._id }, secretKey, { expiresIn });
-      console.log(token)
+      res.json({ user, token });
   }
   
 },
@@ -52,11 +52,9 @@ exports.register = async (req, res) => {
       res.status(401).json({ error: "Invalid credentials" });
       const secretKey = process.env.jwtPrivateKey;
       const token = jwt.sign( { _id: user._id }, secretKey, { expiresIn });
-      
-  
-    res.json({ user, token });
-
-    console.log('Token:', token);
+      res.json({ user, token });
+    
+    
   },
 /**
  * This function use to list a users.
